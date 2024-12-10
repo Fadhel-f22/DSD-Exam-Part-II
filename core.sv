@@ -22,6 +22,7 @@ assign imm = inst[2:0];
 
 // jump logic 
 logic pc_load;
+logic w1;
 assign pc_load = J | (C & carry);
 
 counter_n_bit pc_inst(
@@ -61,7 +62,7 @@ logic [3:0] AluOut;   // Modified
 
 // Mux for selecting inputs for register (regIn)
 mux_2x1 mux1(
-    .in1(imm),  // Modified
+    .in1({1'b0,imm}),  // Modified
     .in2(AluOut),  // Modified
     .sel(Sreg),
     .out(regIn)
@@ -85,14 +86,18 @@ register reg_B(
     .Q(regB)
 );
 
+
+
 // Register RO (regO)
 register reg_O(
-    .clk(coreclk),
+    .clk(clk),  // Modified 
     .resetn(resetn),
     .wen(enO),
     .D(regA),
     .Q(regO)
 );
+
+
 
 // ALU
 
@@ -103,8 +108,16 @@ alu alu_inst(
     .a(regA),
     .b(regB),
     .out(AluOut),
-    .carry(carry)
+    .carry(w1)
 );
 
+// Register carry   //added
+register carry1(
+    .clk(clk),
+    .resetn(resetn),
+    .wen(1'b1),  
+    .D(carry),
+    .Q(carry)
+);
 
 endmodule : core
