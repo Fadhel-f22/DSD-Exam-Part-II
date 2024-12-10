@@ -17,6 +17,7 @@ assign J = inst[7];
 assign C = inst[6];
 assign D = inst[5:4];  // Modified
 assign Sreg = inst[3];
+assign S = inst[2];
 assign imm = inst[2:0];
 
 // jump logic 
